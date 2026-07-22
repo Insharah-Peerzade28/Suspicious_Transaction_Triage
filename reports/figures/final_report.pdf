@@ -1,0 +1,270 @@
+Suspicious Transaction Triage Using Machine Learning
+
+Engineering Report
+
+Module:
+Machine Learning
+
+Assessment:
+A02 – FINTECH
+
+Student Name:
+Your Name
+
+Student ID:
+Your Student ID
+
+Date:
+22 July 2026
+
+
+##Table of Contents##
+
+1. Executive Summary
+2. Problem Framing
+3. Dataset Description
+4. Exploratory Data Analysis
+5. Data Preprocessing
+6. Feature Engineering
+7. Model Development and Comparison
+8. Final Model Evaluation
+9. Deployment
+10. Repository Structure
+11. Limitations
+12. Recommendations
+13. References
+
+##Executive Summary
+Financial institutions process thousands of transactions every day, making it impossible for fraud analysts to manually review every transaction. Fraud detection systems therefore play an important role in prioritizing suspicious transactions for investigation while minimizing unnecessary reviews.
+
+This project developed a machine learning solution for suspicious transaction triage using a binary classification approach. The objective was to predict whether a transaction should enter the fraud investigation queue based only on information available at the time of the transaction.
+
+The project followed the complete machine learning lifecycle, including problem framing, exploratory data analysis, preprocessing, feature engineering, model training, evaluation, and deployment. Several classification algorithms were trained and compared, including a Dummy Classifier, Logistic Regression, Decision Tree, and Random Forest. The final model was selected based on evaluation metrics such as Precision, Recall, F1-score, and ROC-AUC.
+
+A Streamlit application was developed to demonstrate the model and allow users to enter transaction details and receive an understandable prediction and recommendation. The model is intended as a decision-support tool and should complement, rather than replace, human fraud analysts.
+
+
+1.Problem Framing
+
+*Stakeholder*
+
+The primary stakeholders are fraud analysts and the fraud risk management team responsible for reviewing potentially fraudulent financial transactions.
+
+Operational Decision
+
+The operational decision is whether a transaction should be added to the manual fraud investigation queue.
+
+Unit of Analysis
+
+Each row in the dataset represents one financial transaction.
+
+Machine Learning Task
+
+This project addresses a supervised binary classification problem.
+
+Target Variable
+
+The target variable is is_fraud, where:
+
+0 = Legitimate Transaction
+1 = Fraudulent Transaction
+Prediction Horizon
+
+The prediction is made immediately after a transaction is initiated using only information available at that moment.
+
+Cost Analysis
+False Positive
+
+Legitimate transactions may be unnecessarily investigated, increasing operational costs and customer inconvenience.
+
+False Negative
+
+Fraudulent transactions may go undetected, resulting in financial losses and reputational damage.
+
+Non-use
+
+Without machine learning, analysts may overlook fraudulent transactions due to the large transaction volume.
+
+Success Criteria
+
+The project aims to achieve:
+
+High Recall to detect fraudulent transactions
+Good Precision to reduce unnecessary investigations
+Strong F1-score
+High ROC-AUC
+
+
+2. Dataset Description
+
+The project uses the Credit Card Fraud 10K dataset.
+
+Features
+>transaction_id
+>amount
+>transaction_hour
+>merchant_category
+>foreign_transaction
+>location_mismatch
+>device_trust_score
+>velocity_last_24h
+>cardholder_age
+>is_fraud
+
+The transaction_id column was removed before modelling because it is a unique identifier and does not contribute predictive information.
+
+The target variable is is_fraud.
+
+The dataset was stored in its original form within the data/raw directory, while cleaned and engineered datasets were stored separately in the data/processed directory.
+
+
+3. Exploratory Data Analysis
+
+Exploratory Data Analysis (EDA) was conducted before any preprocessing to understand the dataset and identify potential modelling challenges.
+
+The following analyses were performed:
+
+Dataset dimensions
+Data types
+Missing values
+Duplicate records
+Target class distribution
+Numerical feature distributions
+Correlation analysis
+Outlier detection
+Key Findings
+Fraudulent transactions represented a smaller proportion of the dataset than legitimate transactions, indicating class imbalance.
+Transaction amounts exhibited a right-skewed distribution with several high-value outliers.
+Device trust scores varied considerably, suggesting they could provide useful predictive information.
+Velocity of transactions during the previous 24 hours appeared to be associated with fraud risk.
+Foreign transactions combined with location mismatch appeared more frequently among fraudulent cases.
+
+These findings influenced preprocessing, feature engineering, and model selection.
+
+(Insert EDA figures here.)
+
+
+4. Data Preprocessing
+
+The following preprocessing steps were performed:
+
+Removed duplicate records
+Handled missing values
+Dropped the transaction identifier
+Split data into training and testing sets
+Applied StandardScaler to numerical features
+Applied OneHotEncoder to categorical variables
+Implemented preprocessing using a scikit-learn Pipeline and ColumnTransformer
+
+To prevent data leakage, all preprocessing transformations were fitted only on the training data before being applied to the test data.
+
+
+5. Feature Engineering
+
+Several new features were created using only information available at prediction time.
+
+These included:
+
+Amount Category
+Age Group
+Transaction Period
+High Velocity Indicator
+Low Device Trust Indicator
+Foreign Location Risk
+Log-transformed Transaction Amount
+
+These engineered features provide additional information that may improve fraud detection while maintaining operational realism.
+
+
+6. Model Development and Comparison
+
+A Dummy Classifier was first trained to establish a simple non-machine-learning baseline.
+
+Three supervised machine learning algorithms were then evaluated:
+
+Logistic Regression
+Decision Tree
+Random Forest
+
+Hyperparameter tuning was performed using cross-validation to identify the best-performing model.
+
+The evaluation focused on Precision, Recall, F1-score, and ROC-AUC because the cost of missing fraudulent transactions is significantly higher than investigating legitimate ones.
+
+(Insert your model comparison table here with your actual results.)
+
+
+7. Final Model Evaluation
+
+The best-performing model was evaluated once on the unseen test dataset.
+
+The following metrics were reported:
+
+Accuracy
+Precision
+Recall
+F1-score
+ROC-AUC
+PR-AUC
+
+A confusion matrix was generated to examine correct and incorrect predictions.
+
+False positive and false negative cases were analysed to better understand the model's limitations and support future improvements.
+
+(Insert confusion matrix, ROC curve, and Precision–Recall curve here.)
+
+8. Deployment
+
+A Streamlit application was developed to demonstrate the trained model.
+
+The application allows users to enter transaction information, validates the input values, predicts whether a transaction is suspicious, and provides a clear recommendation for fraud analysts.
+
+The application also displays a limitation notice stating that predictions are intended to support human decision-making and should not replace professional judgement.
+
+(Insert screenshot of your Streamlit application here.)
+
+9. Repository Structure
+
+The project follows a structured repository layout to improve reproducibility and maintainability.
+
+It includes:
+
+Raw and processed datasets
+Executed notebooks
+Source code
+Saved models
+Tests
+Documentation
+Streamlit application
+Engineering report
+
+This structure enables future development and simplifies collaboration.
+
+10. Limitations
+
+Several limitations should be considered:
+
+The dataset may be synthetic or limited in size.
+Fraud patterns evolve over time, potentially reducing model performance.
+The model should not be used as the sole basis for approving or rejecting transactions.
+Regular retraining and monitoring are required to maintain effectiveness.
+
+11. Recommendations
+
+The selected model demonstrated strong performance in identifying suspicious transactions and is suitable as a decision-support tool for fraud analysts.
+
+To improve future performance, the following enhancements are recommended:
+
+Collect additional real-world transaction data.
+Evaluate advanced algorithms such as XGBoost or LightGBM.
+Incorporate explainable AI techniques such as SHAP values.
+Monitor model performance for concept drift.
+Deploy the model using a production-ready API such as FastAPI.
+References
+
+Include the resources you actually used. For example:
+
+Dataset source (e.g., Kaggle or the dataset provider)
+Scikit-learn documentation
+Pandas documentation
+NumPy documentation
+Streamlit documentation
